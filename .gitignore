@@ -1,0 +1,32 @@
+node_modules/
+.DS_Store
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Build
+build/
+lib/
+dist/
+
+# iOS
+ios/Pods/
+ios/build/
+*.xcworkspace
+*.xcuserstate
+DerivedData/
+
+# Editor
+.vscode/
+.idea/
+
+# Env
+.env
+.env.local
+
+# Expo
+.expo/
+
+# Local planning
+PLAN.md
