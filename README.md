@@ -5,11 +5,11 @@ Expo module wrapping Apple [Foundation Models](https://developer.apple.com/docum
 ## Requirements
 
 - iOS 26.0 or later (on older iOS, `isAvailable()` returns `false` and calls throw)
-- Xcode 26 SDK for building
+- Xcode 26 SDK (Swift 6 compiler) for building
 - Expo SDK 54+
-- Apple Intelligence–capable device for runtime
+- Apple Intelligence–capable device with the feature enabled in Settings
 
-The module uses `#if canImport(FoundationModels)` so older Xcode versions still compile (all APIs become no-ops at runtime).
+The module uses `#if compiler(>=6.0)` so older Swift compilers still build (APIs become no-ops at runtime). `isAvailable()` reflects `SystemLanguageModel.default.isAvailable` — it is `false` on ineligible hardware, when Apple Intelligence is disabled, or while the model is still downloading.
 
 ## Install
 
@@ -31,10 +31,17 @@ npx expo run:ios
 ### Availability check
 
 ```ts
-import { isAvailable } from "expo-foundation-models";
+import { isAvailable, unavailabilityReason } from "expo-foundation-models";
 
 if (!isAvailable()) {
-  // Fallback path (older iOS, non-AI device, etc.)
+  switch (unavailabilityReason()) {
+    case "osTooOld":                   /* iOS < 26 */ break;
+    case "deviceNotEligible":          /* hardware lacks Apple Intelligence */ break;
+    case "appleIntelligenceNotEnabled":/* ask user to enable in Settings */ break;
+    case "modelNotReady":              /* still downloading — retry later */ break;
+    case "nativeModuleNotLoaded":      /* wrong platform or not rebuilt */ break;
+    case "unknown":                    /* unmapped new case */ break;
+  }
 }
 ```
 
@@ -83,6 +90,8 @@ session.release(); // free native resources when done
 ```ts
 function isAvailable(): boolean;
 
+function unavailabilityReason(): UnavailabilityReason | null;
+
 function generate(prompt: string, options?: GenerateOptions): Promise<string>;
 
 function createSession(options?: { instructions?: string }): Promise<LanguageModelSession>;
@@ -92,6 +101,14 @@ interface GenerateOptions {
   temperature?: number;          // 0.0–2.0
   maximumResponseTokens?: number;
 }
+
+type UnavailabilityReason =
+  | "deviceNotEligible"
+  | "appleIntelligenceNotEnabled"
+  | "modelNotReady"
+  | "osTooOld"
+  | "nativeModuleNotLoaded"
+  | "unknown";
 
 class LanguageModelSession {
   respond(prompt: string, options?: GenerateOptions): Promise<string>;

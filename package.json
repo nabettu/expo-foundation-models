@@ -1,6 +1,6 @@
 {
   "name": "expo-foundation-models",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Expo module wrapping Apple Foundation Models (iOS 26+). On-device LLM via LanguageModelSession.",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -30,8 +30,8 @@
   "files": [
     "src",
     "ios",
+    "index.ts",
     "expo-module.config.json",
-    "ExpoFoundationModels.podspec",
     "README.md",
     "LICENSE"
   ],

@@ -1,9 +1,10 @@
-import { requireNativeModule } from "expo-modules-core";
+import { requireOptionalNativeModule } from "expo-modules-core";
 
 import type { GenerateOptions } from "./types";
 
 interface NativeModule {
   isAvailable(): boolean;
+  unavailabilityReason(): string | null;
   generate(prompt: string, options?: GenerateOptions): Promise<string>;
   createSession(instructions?: string): Promise<string>;
   sessionRespond(
@@ -14,4 +15,4 @@ interface NativeModule {
   releaseSession(sessionId: string): void;
 }
 
-export default requireNativeModule<NativeModule>("ExpoFoundationModels");
+export default requireOptionalNativeModule<NativeModule>("ExpoFoundationModels");

@@ -16,3 +16,21 @@ export interface CreateSessionOptions {
   /** System prompt that persists across every turn of this session. */
   instructions?: string;
 }
+
+/**
+ * Returned by `unavailabilityReason()`:
+ * - `null` → available
+ * - `"deviceNotEligible"` → hardware lacks Apple Intelligence
+ * - `"appleIntelligenceNotEnabled"` → user hasn't enabled Apple Intelligence in Settings
+ * - `"modelNotReady"` → model is still downloading / not warmed up
+ * - `"osTooOld"` → below iOS 26
+ * - `"nativeModuleNotLoaded"` → native module didn't register (wrong platform or not rebuilt)
+ * - `"unknown"` → new case not yet mapped
+ */
+export type UnavailabilityReason =
+  | "deviceNotEligible"
+  | "appleIntelligenceNotEnabled"
+  | "modelNotReady"
+  | "osTooOld"
+  | "nativeModuleNotLoaded"
+  | "unknown";

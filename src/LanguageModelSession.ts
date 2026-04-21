@@ -10,12 +10,15 @@ export class LanguageModelSession {
     if (this.released) {
       throw new Error("LanguageModelSession has been released.");
     }
+    if (!NativeModule) {
+      throw new Error("ExpoFoundationModels native module is not loaded.");
+    }
     return NativeModule.sessionRespond(this.sessionId, prompt, options);
   }
 
   release(): void {
     if (this.released) return;
     this.released = true;
-    NativeModule.releaseSession(this.sessionId);
+    NativeModule?.releaseSession(this.sessionId);
   }
 }

@@ -1,7 +1,7 @@
 import ExpoModulesCore
 import Foundation
 
-#if canImport(FoundationModels)
+#if compiler(>=6.0)
 import FoundationModels
 #endif
 
@@ -13,7 +13,7 @@ struct GenerateOptionsRecord: Record {
 
 public class ExpoFoundationModelsModule: Module {
   // Stored as `Any` so we avoid availability annotations on stored properties.
-  // Values are cast to `LanguageModelSession` on access inside iOS 26+ guards.
+  // Cast to `LanguageModelSession` inside iOS 26+ guards.
   private var sessions: [String: Any] = [:]
   private let sessionsQueue = DispatchQueue(label: "expo.foundationmodels.sessions")
 
@@ -21,14 +21,25 @@ public class ExpoFoundationModelsModule: Module {
     Name("ExpoFoundationModels")
 
     Function("isAvailable") { () -> Bool in
-      #if canImport(FoundationModels)
-      if #available(iOS 26.0, *) { return true }
+      #if compiler(>=6.0)
+      if #available(iOS 26.0, *) {
+        return SystemLanguageModel.default.isAvailable
+      }
       #endif
       return false
     }
 
+    Function("unavailabilityReason") { () -> String? in
+      #if compiler(>=6.0)
+      if #available(iOS 26.0, *) {
+        return Self.getUnavailabilityReason()
+      }
+      #endif
+      return "osTooOld"
+    }
+
     AsyncFunction("generate") { (prompt: String, options: GenerateOptionsRecord?) -> String in
-      #if canImport(FoundationModels)
+      #if compiler(>=6.0)
       if #available(iOS 26.0, *) {
         let session: LanguageModelSession
         if let instructions = options?.instructions, !instructions.isEmpty {
@@ -47,7 +58,7 @@ public class ExpoFoundationModelsModule: Module {
     }
 
     AsyncFunction("createSession") { (instructions: String?) -> String in
-      #if canImport(FoundationModels)
+      #if compiler(>=6.0)
       if #available(iOS 26.0, *) {
         let session: LanguageModelSession
         if let instructions, !instructions.isEmpty {
@@ -64,7 +75,7 @@ public class ExpoFoundationModelsModule: Module {
     }
 
     AsyncFunction("sessionRespond") { (sessionId: String, prompt: String, options: GenerateOptionsRecord?) -> String in
-      #if canImport(FoundationModels)
+      #if compiler(>=6.0)
       if #available(iOS 26.0, *) {
         let stored: Any? = self.sessionsQueue.sync { self.sessions[sessionId] }
         guard let session = stored as? LanguageModelSession else {
@@ -85,7 +96,25 @@ public class ExpoFoundationModelsModule: Module {
     }
   }
 
-  #if canImport(FoundationModels)
+  #if compiler(>=6.0)
+  @available(iOS 26.0, *)
+  private static func getUnavailabilityReason() -> String? {
+    let model = SystemLanguageModel.default
+    if model.isAvailable { return nil }
+    switch model.availability {
+    case .available:
+      return nil
+    case .unavailable(.deviceNotEligible):
+      return "deviceNotEligible"
+    case .unavailable(.appleIntelligenceNotEnabled):
+      return "appleIntelligenceNotEnabled"
+    case .unavailable(.modelNotReady):
+      return "modelNotReady"
+    case .unavailable:
+      return "unknown"
+    }
+  }
+
   @available(iOS 26.0, *)
   private func buildGenerationOptions(_ opts: GenerateOptionsRecord?) -> GenerationOptions {
     GenerationOptions(
@@ -98,7 +127,7 @@ public class ExpoFoundationModelsModule: Module {
 
 internal class FoundationModelsUnavailableException: Exception {
   override var reason: String {
-    "Foundation Models is not available on this device. Requires iOS 26.0+ on an Apple Intelligence–capable device."
+    "Foundation Models is not available. Call unavailabilityReason() for details."
   }
 }
 
