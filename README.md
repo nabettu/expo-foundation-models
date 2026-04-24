@@ -122,6 +122,10 @@ class LanguageModelSession {
 - **Old Architecture**: works (`newArchEnabled: false` is fine).
 - **Simulator**: Foundation Models runs in the iOS 26 simulator on Apple Silicon Macs.
 
+## Concurrency
+
+The module does not queue calls internally. Compute is serialized by the Neural Engine regardless, so parallel calls don't speed anything up — but each live session holds its own KV cache, so fan-out from a tight loop can pressure memory on lower-end devices (especially with long prompts or multi-turn history). If you call `generate()` or `session.respond()` in a fan-out, rate-limit it yourself (e.g. cap to ~3 concurrent).
+
 ## License
 
 MIT © nabettu
