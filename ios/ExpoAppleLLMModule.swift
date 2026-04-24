@@ -11,14 +11,14 @@ struct GenerateOptionsRecord: Record {
   @Field var maximumResponseTokens: Int?
 }
 
-public class ExpoFoundationModelsModule: Module {
+public class ExpoAppleLLMModule: Module {
   // Stored as `Any` so we avoid availability annotations on stored properties.
   // Cast to `LanguageModelSession` inside iOS 26+ guards.
   private var sessions: [String: Any] = [:]
-  private let sessionsQueue = DispatchQueue(label: "expo.foundationmodels.sessions")
+  private let sessionsQueue = DispatchQueue(label: "expo.applellm.sessions")
 
   public func definition() -> ModuleDefinition {
-    Name("ExpoFoundationModels")
+    Name("ExpoAppleLLM")
 
     Function("isAvailable") { () -> Bool in
       #if compiler(>=6.0)

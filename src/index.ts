@@ -1,4 +1,4 @@
-import NativeModule from "./ExpoFoundationModels";
+import NativeModule from "./ExpoAppleLLM";
 import { LanguageModelSession } from "./LanguageModelSession";
 import type {
   CreateSessionOptions,
@@ -11,7 +11,7 @@ export type { CreateSessionOptions, GenerateOptions, UnavailabilityReason };
 
 const notLoadedError = () =>
   new Error(
-    "ExpoFoundationModels native module is not loaded. Requires iOS 26+ and a native rebuild after install.",
+    "expo-apple-llm native module is not loaded. Requires iOS 26+ and a native rebuild after install.",
   );
 
 export function isAvailable(): boolean {

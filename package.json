@@ -1,7 +1,7 @@
 {
-  "name": "expo-foundation-models",
-  "version": "0.1.1",
-  "description": "Expo module wrapping Apple Foundation Models (iOS 26+). On-device LLM via LanguageModelSession.",
+  "name": "expo-apple-llm",
+  "version": "0.2.0",
+  "description": "Expo module for Apple's on-device LLM (Foundation Models, iOS 26+). One-shot generation and multi-turn LanguageModelSession, no network or API key.",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "sideEffects": false,
@@ -12,19 +12,21 @@
     "expo",
     "expo-modules",
     "ios",
+    "apple-llm",
     "foundation-models",
     "apple-intelligence",
     "llm",
-    "on-device"
+    "on-device",
+    "language-model-session"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nabettu/expo-foundation-models.git"
+    "url": "git+https://github.com/nabettu/expo-apple-llm.git"
   },
   "bugs": {
-    "url": "https://github.com/nabettu/expo-foundation-models/issues"
+    "url": "https://github.com/nabettu/expo-apple-llm/issues"
   },
-  "homepage": "https://github.com/nabettu/expo-foundation-models#readme",
+  "homepage": "https://github.com/nabettu/expo-apple-llm#readme",
   "author": "nabettu",
   "license": "MIT",
   "files": [

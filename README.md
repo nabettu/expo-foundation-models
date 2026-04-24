@@ -1,6 +1,6 @@
-# expo-foundation-models
+# expo-apple-llm
 
-Expo module wrapping Apple [Foundation Models](https://developer.apple.com/documentation/foundationmodels) (iOS 26+). On-device LLM via `LanguageModelSession` — no network, no API key.
+Expo module for Apple's on-device LLM. Wraps the [Foundation Models](https://developer.apple.com/documentation/foundationmodels) framework (iOS 26+) — one-shot `generate()` and multi-turn `LanguageModelSession`, no network, no API key.
 
 ## Requirements
 
@@ -14,9 +14,9 @@ The module uses `#if compiler(>=6.0)` so older Swift compilers still build (APIs
 ## Install
 
 ```sh
-npm install expo-foundation-models
+npm install expo-apple-llm
 # or
-bun add expo-foundation-models
+bun add expo-apple-llm
 ```
 
 Then rebuild the native iOS app:
@@ -31,7 +31,7 @@ npx expo run:ios
 ### Availability check
 
 ```ts
-import { isAvailable, unavailabilityReason } from "expo-foundation-models";
+import { isAvailable, unavailabilityReason } from "expo-apple-llm";
 
 if (!isAvailable()) {
   switch (unavailabilityReason()) {
@@ -50,7 +50,7 @@ Always wrap calls in `Platform.OS === "ios"` — this module is iOS-only.
 ### One-shot generation
 
 ```ts
-import { generate } from "expo-foundation-models";
+import { generate } from "expo-apple-llm";
 
 const answer = await generate("Summarize quantum entanglement in one sentence.");
 ```
@@ -73,7 +73,7 @@ const answer = await generate(
 `LanguageModelSession` preserves conversation history on the native side:
 
 ```ts
-import { createSession } from "expo-foundation-models";
+import { createSession } from "expo-apple-llm";
 
 const session = await createSession({
   instructions: "You are a helpful cooking assistant.",

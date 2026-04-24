@@ -15,4 +15,4 @@ interface NativeModule {
   releaseSession(sessionId: string): void;
 }
 
-export default requireOptionalNativeModule<NativeModule>("ExpoFoundationModels");
+export default requireOptionalNativeModule<NativeModule>("ExpoAppleLLM");

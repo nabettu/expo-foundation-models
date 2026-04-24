@@ -1,4 +1,4 @@
-import NativeModule from "./ExpoFoundationModels";
+import NativeModule from "./ExpoAppleLLM";
 import type { GenerateOptions } from "./types";
 
 export class LanguageModelSession {
@@ -11,7 +11,7 @@ export class LanguageModelSession {
       throw new Error("LanguageModelSession has been released.");
     }
     if (!NativeModule) {
-      throw new Error("ExpoFoundationModels native module is not loaded.");
+      throw new Error("expo-apple-llm native module is not loaded.");
     }
     return NativeModule.sessionRespond(this.sessionId, prompt, options);
   }
